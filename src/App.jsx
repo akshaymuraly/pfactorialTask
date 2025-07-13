@@ -34,10 +34,10 @@ const App = () => {
                 <Routes>
                     <Route element={<MainTheme themeClasses={themeClasses}/>}>
                         <Route path='/' element={<Login isLoggedIn={isLoggedIn} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} setIsLoggedIn={setIsLoggedIn} toggleTheme={toggleTheme} themeClasses={themeClasses}/>}/>
-                        <Route element={<ProtectedRoute isLoggedIn={isLoggedIn}/>}>
+                    </Route>
+                     <Route element={<ProtectedRoute isLoggedIn={isLoggedIn}/>}>
                           <Route path='/home' element={<Landing isDarkMode={isDarkMode} toggleTheme={toggleTheme} setIsLoggedIn={setIsLoggedIn}/>}/>
                         </Route>
-                    </Route>
                 </Routes>
             </Router>
         )
