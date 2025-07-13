@@ -46,10 +46,10 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -112,26 +112,26 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    
+
     // Add empty cells for days before the first day of the month (blank days)
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Add all days of the current month only
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
-    
+
     // Fill remaining cells with previous/next month days (greyed out)
     const totalCells = Math.ceil((startingDayOfWeek + daysInMonth) / 7) * 7;
     const remainingCells = totalCells - (startingDayOfWeek + daysInMonth);
-    
+
     for (let day = 1; day <= remainingCells; day++) {
       const nextMonthDay = new Date(year, month + 1, day);
       days.push({ date: nextMonthDay, isAdjacentMonth: true });
     }
-    
+
     return days;
   };
 
@@ -144,14 +144,14 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
   const handleDateClick = (date) => {
     // Don't allow clicking on blank days, adjacent month days, or past dates
     if (!date || typeof date !== 'object' || date.isAdjacentMonth) return;
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     if (selectedDate < today) return;
-    
+
     setSelectedDate(date);
     setShowForm(true);
     setEditingAppointment(null);
@@ -165,7 +165,7 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
 
   const handleFormSubmit = (e) => {
     if (e) e.preventDefault();
-    
+
     if (!formData.patientId || !formData.doctorId || !formData.time) {
       alert('Please fill in all fields');
       return;
@@ -180,7 +180,7 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
     };
 
     if (editingAppointment) {
-      setAppointments(prev => 
+      setAppointments(prev =>
         prev.map(apt => apt.id === editingAppointment.id ? newAppointment : apt)
       );
     } else {
@@ -218,11 +218,11 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -239,13 +239,13 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
   // Mobile Day View
   const renderMobileDayView = () => {
     const dayAppointments = getAppointmentsForDate(mobileSelectedDate);
-    
+
     // Get current month date range
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-    
+
     return (
       <div className="p-3">
         {/* Date Picker */}
@@ -259,11 +259,10 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
             onChange={(e) => setMobileSelectedDate(new Date(e.target.value))}
             min={firstDayOfMonth.toISOString().split('T')[0]}
             max={lastDayOfMonth.toISOString().split('T')[0]}
-            className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+            className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${isDarkMode
+                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                 : 'bg-white border-gray-300 text-gray-900'
-            }`}
+              }`}
           />
         </div>
 
@@ -281,15 +280,14 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
         <button
           onClick={() => handleDateClick(mobileSelectedDate)}
           disabled={mobileSelectedDate < new Date().setHours(0, 0, 0, 0)}
-          className={`w-full mb-3 p-2 rounded-lg flex items-center justify-center space-x-2 transition-colors ${
-            mobileSelectedDate < new Date().setHours(0, 0, 0, 0)
-              ? isDarkMode 
-                ? 'bg-gray-600 cursor-not-allowed text-gray-400' 
+          className={`w-full mb-3 p-2 rounded-lg flex items-center justify-center space-x-2 transition-colors ${mobileSelectedDate < new Date().setHours(0, 0, 0, 0)
+              ? isDarkMode
+                ? 'bg-gray-600 cursor-not-allowed text-gray-400'
                 : 'bg-gray-400 cursor-not-allowed text-gray-200'
-              : isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg' 
+              : isDarkMode
+                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
                 : 'bg-blue-600 hover:bg-blue-700 text-white'
-          }`}
+            }`}
         >
           <Plus className="w-4 h-4" />
           <span>Add Appointment</span>
@@ -307,11 +305,10 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
             dayAppointments.map(appointment => (
               <div
                 key={appointment.id}
-                className={`p-3 rounded-lg border transition-colors ${
-                  isDarkMode 
-                    ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+                className={`p-3 rounded-lg border transition-colors ${isDarkMode
+                    ? 'bg-gray-700 border-gray-600 hover:bg-gray-600'
                     : 'bg-white border-gray-200 hover:bg-gray-50'
-                } shadow-sm`}
+                  } shadow-sm`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -331,21 +328,19 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
                   <div className="flex space-x-1">
                     <button
                       onClick={() => handleEditAppointment(appointment)}
-                      className={`p-1 rounded-lg transition-colors ${
-                        isDarkMode 
-                          ? 'hover:bg-gray-600 text-gray-300 hover:text-white' 
+                      className={`p-1 rounded-lg transition-colors ${isDarkMode
+                          ? 'hover:bg-gray-600 text-gray-300 hover:text-white'
                           : 'hover:bg-gray-100 text-gray-600 hover:text-gray-800'
-                      }`}
+                        }`}
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteAppointment(appointment.id)}
-                      className={`p-1 rounded-lg transition-colors ${
-                        isDarkMode 
-                          ? 'hover:bg-red-900/30 text-red-400 hover:text-red-300' 
+                      className={`p-1 rounded-lg transition-colors ${isDarkMode
+                          ? 'hover:bg-red-900/30 text-red-400 hover:text-red-300'
                           : 'hover:bg-red-50 text-red-600 hover:text-red-700'
-                      }`}
+                        }`}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -365,7 +360,7 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     const currentMonthDate = new Date(currentYear, currentMonth, 1);
-    
+
     const days = getDaysInMonth(currentMonthDate);
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -375,26 +370,24 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
         <div className="flex items-center justify-between mb-4">
           <button
             disabled
-            className={`p-2 rounded-lg opacity-50 cursor-not-allowed ${
-              isDarkMode 
-                ? 'text-gray-500 bg-gray-700' 
+            className={`p-2 rounded-lg opacity-50 cursor-not-allowed ${isDarkMode
+                ? 'text-gray-500 bg-gray-700'
                 : 'text-gray-400 bg-gray-100'
-            }`}
+              }`}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          
+
           <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             {currentMonthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </h2>
-          
+
           <button
             disabled
-            className={`p-2 rounded-lg opacity-50 cursor-not-allowed ${
-              isDarkMode 
-                ? 'text-gray-500 bg-gray-700' 
+            className={`p-2 rounded-lg opacity-50 cursor-not-allowed ${isDarkMode
+                ? 'text-gray-500 bg-gray-700'
                 : 'text-gray-400 bg-gray-100'
-            }`}
+              }`}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -406,106 +399,97 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
           {dayNames.map(day => (
             <div
               key={day}
-              className={`p-2 text-center text-sm font-semibold ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}
+              className={`p-2 text-center text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                }`}
             >
               {day}
             </div>
           ))}
-          
+
           {/* Calendar Days */}
           {days.map((day, index) => {
             // Handle blank days (before month starts)
             if (!day) {
               return (
-                <div 
-                  key={index} 
-                  className={`p-2 h-32 ${
-                    isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
-                  }`}
+                <div
+                  key={index}
+                  className={`p-2 h-32 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
+                    }`}
                 ></div>
               );
             }
-            
+
             // Handle adjacent month days (greyed out, not interactive)
             if (day.isAdjacentMonth) {
               return (
                 <div
                   key={`adjacent-${index}`}
-                  className={`p-2 h-32 border ${
-                    isDarkMode 
-                      ? 'border-gray-700 bg-gray-800' 
+                  className={`p-2 h-32 border ${isDarkMode
+                      ? 'border-gray-700 bg-gray-800'
                       : 'border-gray-100 bg-gray-50'
-                  }`}
+                    }`}
                 >
-                  <span className={`text-sm ${
-                    isDarkMode ? 'text-gray-600' : 'text-gray-400'
-                  }`}>
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-600' : 'text-gray-400'
+                    }`}>
                     {day.date.getDate()}
                   </span>
                 </div>
               );
             }
-            
+
             // Handle current month days
             const dayAppointments = getAppointmentsForDate(day);
             const isToday = day.toDateString() === new Date().toDateString();
             const isPastDate = day < new Date().setHours(0, 0, 0, 0);
-            
+
             return (
               <div
                 key={day.toISOString()}
                 onClick={() => !isPastDate && handleDateClick(day)}
-                className={`p-2 h-32 border transition-colors ${
-                  isDarkMode 
-                    ? 'border-gray-600' 
+                className={`p-2 h-32 border transition-colors ${isDarkMode
+                    ? 'border-gray-600'
                     : 'border-gray-200'
-                } ${
-                  isPastDate
+                  } ${isPastDate
                     ? 'cursor-not-allowed opacity-50'
                     : isDarkMode
                       ? 'cursor-pointer hover:bg-gray-700 hover:border-gray-500'
                       : 'cursor-pointer hover:bg-gray-50 hover:border-gray-300'
-                } ${isToday ? 
-                  isDarkMode 
-                    ? 'bg-blue-900/30 border-blue-500' 
-                    : 'bg-blue-50 border-blue-200' 
-                  : isDarkMode 
-                    ? 'bg-gray-800' 
-                    : 'bg-white'
-                }`}
+                  } ${isToday ?
+                    isDarkMode
+                      ? 'bg-blue-900/30 border-blue-500'
+                      : 'bg-blue-50 border-blue-200'
+                    : isDarkMode
+                      ? 'bg-gray-800'
+                      : 'bg-white'
+                  }`}
               >
                 <div className="flex justify-between items-start mb-1">
-                  <span className={`text-sm font-semibold ${
-                    isPastDate
+                  <span className={`text-sm font-semibold ${isPastDate
                       ? isDarkMode ? 'text-gray-600' : 'text-gray-400'
-                      : isToday 
-                        ? isDarkMode ? 'text-blue-400' : 'text-blue-600' 
-                        : isDarkMode 
-                          ? 'text-white' 
+                      : isToday
+                        ? isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                        : isDarkMode
+                          ? 'text-white'
                           : 'text-gray-900'
-                  }`}>
+                    }`}>
                     {day.getDate()}
                   </span>
                   {dayAppointments.length > 0 && (
-                    <span className={`text-xs px-1 py-0.5 rounded-full font-medium ${
-                      isPastDate
+                    <span className={`text-xs px-1 py-0.5 rounded-full font-medium ${isPastDate
                         ? isDarkMode ? 'bg-gray-700 text-gray-500' : 'bg-gray-200 text-gray-500'
-                        : isDarkMode 
-                          ? 'bg-blue-900/50 text-blue-300' 
+                        : isDarkMode
+                          ? 'bg-blue-900/50 text-blue-300'
                           : 'bg-blue-100 text-blue-600'
-                    }`}>
+                      }`}>
                       {dayAppointments.length}
                     </span>
                   )}
                 </div>
-                
+
                 {/* Appointments Preview - Fixed container height with min-height */}
-                <div 
-                  className={`min-h-[80px] space-y-1 ${
-                    isPastDate ? 'opacity-60' : ''
-                  }`}
+                <div
+                  className={`min-h-[80px] space-y-1 ${isPastDate ? 'opacity-60' : ''
+                    }`}
                   style={{
                     height: '80px',
                     overflowY: 'auto',
@@ -521,13 +505,12 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
                   {dayAppointments.map(appointment => (
                     <div
                       key={appointment.id}
-                      className={`text-xs p-1 rounded truncate ${
-                        isPastDate
+                      className={`text-xs p-1 rounded truncate ${isPastDate
                           ? isDarkMode ? 'bg-gray-700 text-gray-500' : 'bg-gray-100 text-gray-500'
-                          : isDarkMode 
-                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
+                          : isDarkMode
+                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
                             : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                      } transition-colors cursor-pointer`}
+                        } transition-colors cursor-pointer`}
                       title={`${appointment.time} - ${getPatientName(appointment.patientId)} with ${getDoctorName(appointment.doctorId)}`}
                     >
                       <div className="font-medium">{appointment.time}</div>
@@ -553,22 +536,19 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
       {/* Appointment Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`w-full max-w-md rounded-lg shadow-xl ${
-            isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white'
-          }`}>
-            <div className={`flex items-center justify-between p-4 border-b ${
-              isDarkMode ? 'border-gray-700' : 'border-gray-200'
+          <div className={`w-full max-w-md rounded-lg shadow-xl ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white'
             }`}>
+            <div className={`flex items-center justify-between p-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'
+              }`}>
               <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {editingAppointment ? 'Edit Appointment' : 'Add New Appointment'}
               </h3>
               <button
                 onClick={() => setShowForm(false)}
-                className={`p-1 rounded-lg transition-colors ${
-                  isDarkMode 
-                    ? 'hover:bg-gray-700 text-gray-300 hover:text-white' 
+                className={`p-1 rounded-lg transition-colors ${isDarkMode
+                    ? 'hover:bg-gray-700 text-gray-300 hover:text-white'
                     : 'hover:bg-gray-100 text-gray-600 hover:text-gray-800'
-                }`}
+                  }`}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -578,38 +558,34 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
               <div className="space-y-4">
                 {/* Date Display */}
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${
-                    isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                     Date
                   </label>
-                  <div className={`p-2 rounded-lg ${
-                    isDarkMode ? 'bg-gray-700 text-white border border-gray-600' : 'bg-gray-50 text-gray-900'
-                  }`}>
-                    {new Date(formData.date).toLocaleDateString('en-US', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
+                  <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700 text-white border border-gray-600' : 'bg-gray-50 text-gray-900'
+                    }`}>
+                    {new Date(formData.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
                     })}
                   </div>
                 </div>
 
                 {/* Patient Selection */}
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${
-                    isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                     Patient
                   </label>
                   <select
                     value={formData.patientId}
                     onChange={(e) => setFormData(prev => ({ ...prev, patientId: e.target.value }))}
-                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
+                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
                         : 'bg-white border-gray-300 text-gray-900'
-                    }`}
+                      }`}
                     required
                   >
                     <option value="">Select a patient</option>
@@ -623,19 +599,17 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
 
                 {/* Doctor Selection */}
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${
-                    isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                     Doctor
                   </label>
                   <select
                     value={formData.doctorId}
                     onChange={(e) => setFormData(prev => ({ ...prev, doctorId: e.target.value }))}
-                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
+                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
                         : 'bg-white border-gray-300 text-gray-900'
-                    }`}
+                      }`}
                     required
                   >
                     <option value="">Select a doctor</option>
@@ -649,20 +623,18 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
 
                 {/* Time Selection */}
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${
-                    isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                     Time
                   </label>
                   <input
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
+                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
                         : 'bg-white border-gray-300 text-gray-900'
-                    }`}
+                      }`}
                     required
                   />
                 </div>
@@ -673,11 +645,10 @@ const AppointmentCalendar = ({ isDarkMode = false }) => {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
-                    isDarkMode 
-                      ? 'border-gray-600 hover:bg-gray-700 text-gray-300 hover:text-white' 
+                  className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${isDarkMode
+                      ? 'border-gray-600 hover:bg-gray-700 text-gray-300 hover:text-white'
                       : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                  }`}
+                    }`}
                 >
                   Cancel
                 </button>
